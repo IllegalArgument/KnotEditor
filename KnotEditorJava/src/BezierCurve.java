@@ -71,10 +71,25 @@ public class BezierCurve {
 		this.x2 = x2;
 		this.y2 = y2;
 	}
+	
+	public Point selfIntersection() {
+		double u2 = -2.0*a2*a3*b2*b3 + a2*a2*b3*b3 + a3*a3*b2*b2;
+		double u1 = -a1*a3*b2*b3 - a2*a3*b1*b3 + a1*a2*b3*b3 + b1*b2*a3*a3;
+		double u0 = -a1*a2*b2*b3 - a2*a3*b1*b2 - 2*a1*a3*b1*b3 + a1*a1*b3*b3 + a3*a3*b1*b1 + a1*a3*b2*b2 + b1*b3*a2*a2;
+		double disc = u1*u1 - 4.0*u2*u0;
+		if (disc < 0) return null;
+		double t1 = (-u1 + Math.sqrt(disc)) / (2.0*u2);
+		double t2 = (-u1 - Math.sqrt(disc)) / (2.0*u2);
+		System.out.println("Self intersection roots at " + t1 + " and " + t2);
+		return new Point(a0 + t1*(a1 + t1*(a2 + t1*a3)), b0 + t1*(b1 + t1*(b2 + t1*b3)));
+	}
 
 	public Set<Point> intersections(BezierCurve other) {
 		Set<Point> intersections = new HashSet<Point>();
-
+		
+		//We use the implicit form of the "this" curve, and the parametric
+		//form of the "other" curve
+		
 		double oa3 = other.a3;
 		double oa2 = other.a2;
 		double oa1 = other.a1;
@@ -86,6 +101,7 @@ public class BezierCurve {
 
 		//This is the polynomial we need to solve to find the values of t
 		//where the intersection(s) occur
+		//p09*t^9 + p08*t^8 + ... + p01*t + p00 = 0
 
 		double p09 = oa3*uxyy*ob3*ob3 + ob3*uxxy*oa3*oa3 + uxxx*oa3*oa3*oa3 + uyyy*ob3*ob3*ob3;
 		double p08 = 2.0*oa2*oa3*ob3*uxxy + 2.0*oa3*ob2*ob3*uxyy + oa2*uxyy*ob3*ob3 + ob2*uxxy*oa3*oa3 + 3.0*oa2*uxxx*oa3*oa3 + 3.0*ob2*uyyy*ob3*ob3;
@@ -184,7 +200,10 @@ public class BezierCurve {
 		while (!ranges.isEmpty()) {
 			double start = ranges.firstKey();
 			double end = ranges.get(start);
+			
+			//We can remove this range from the queue
 			ranges.remove(start);
+			
 			//Evaluate the polynomials using a Horner scheme
 			double startp0 = p00 + start*(p01 + start*(p02 + start*(p03 + start*(p04 + start*(p05 + start*(p06 + start*(p07 + start*(p08 + start*p09))))))));
 			double startp1 = p10 + start*(p11 + start*(p12 + start*(p13 + start*(p14 + start*(p15 + start*(p16 + start*(p17 + start*p18)))))));
@@ -206,10 +225,13 @@ public class BezierCurve {
 			double endp7 = p70 + end*(p71 + end*p72);
 			double endp8 = p80 + end*p81;
 			double endp9 = p90;
+			
 			//And count the number of sign changes that occur in the range
 			int startsignchange = ((startp0 >= 0.0) == (startp1 >= 0.0) ? 0 : 1) + ((startp1 >= 0.0) == (startp2 >= 0.0) ? 0 : 1) + ((startp2 >= 0.0) == (startp3 >= 0.0) ? 0 : 1) + ((startp3 >= 0.0) == (startp4 >= 0.0) ? 0 : 1) + ((startp4 >= 0.0) == (startp5 >= 0.0) ? 0 : 1) + ((startp5 >= 0.0) == (startp6 >= 0.0) ? 0 : 1) + ((startp6 >= 0.0) == (startp7 >= 0.0) ? 0 : 1) + ((startp7 >= 0.0) == (startp8 >= 0.0) ? 0 : 1) + ((startp8 >= 0.0) == (startp9 >= 0.0) ? 0 : 1);
 			int endsignchange = ((endp0 >= 0.0) == (endp1 >= 0.0) ? 0 : 1) + ((endp1 >= 0.0) == (endp2 >= 0.0) ? 0 : 1) + ((endp2 >= 0.0) == (endp3 >= 0.0) ? 0 : 1) + ((endp3 >= 0.0) == (endp4 >= 0.0) ? 0 : 1) + ((endp4 >= 0.0) == (endp5 >= 0.0) ? 0 : 1) + ((endp5 >= 0.0) == (endp6 >= 0.0) ? 0 : 1) + ((endp6 >= 0.0) == (endp7 >= 0.0) ? 0 : 1) + ((endp7 >= 0.0) == (endp8 >= 0.0) ? 0 : 1) + ((endp8 >= 0.0) == (endp9 >= 0.0) ? 0 : 1);
-
+			
+			//The number of roots in the range is the difference between the
+			//sign change counts
 			int nroots = Math.abs(startsignchange - endsignchange);
 			if (nroots > 0) {
 				double mid = (start + end) / 2.0;
@@ -221,18 +243,27 @@ public class BezierCurve {
 				}
 			}
 		}
-		System.out.println("Roots at " + roots);
+		System.out.println("Intersection roots at " + roots);
 
 		for (double t : roots) {
 			//Again, use a Horner scheme to evaluate the polynomials for the curve
+		    	//Remember that we need to use the parametric equation of the "other"
+		    	//curve for this, since the "this" curve was implicitized
 			intersections.add(new Point(oa0 + t*(oa1 + t*(oa2 + t*oa3)), ob0 + t*(ob1 + t*(ob2 + t*ob3))));
 		}
 		return intersections;
 	}
 
 	public static void main(String[] args) {
-		BezierCurve p = new BezierCurve(0, 500, 166, -50, 333, 1000, 500, 0);
-		BezierCurve q = new BezierCurve(0, 0, 166, 1000, 333, -500, 500, 500);
+		//BezierCurve p = new BezierCurve(0, 1000, 333, -2000, 666, 3000, 1000, 0);
+		//BezierCurve q = new BezierCurve(0, 0, 3000, 333, -2000, 666, 1000, 1000);
+		BezierCurve p = new BezierCurve(0, 1000, 1000, -300, 0, -300, 750, 1000);
+		BezierCurve q = new BezierCurve(0, 0, 1250, 1500, -1000, 1000, 1000, 0);
+		Point selfIntersectionP = p.selfIntersection();
+		Point selfIntersectionQ = q.selfIntersection();
+		System.out.println("P intersects itself at " + selfIntersectionP);
+		System.out.println("Q intersects itself at " + selfIntersectionQ);
+		System.out.println();
 		Set<Point> intersections = q.intersections(p);
 		System.out.println("Intersections at " + intersections);
 		BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
@@ -241,12 +272,19 @@ public class BezierCurve {
 		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-		g.translate(250, 250);
 		g.setStroke(new BasicStroke(1));
 		g.draw(new CubicCurve2D.Double(p.x1, p.y1, p.cx1, p.cy1, p.cx2, p.cy2, p.x2, p.y2));
 		g.draw(new CubicCurve2D.Double(q.x1, q.y1, q.cx1, q.cy1, q.cx2, q.cy2, q.x2, q.y2));
 		g.setStroke(new BasicStroke(2));
 		g.setColor(Color.RED);
+		if (selfIntersectionP != null) {
+			g.draw(new Line2D.Double(selfIntersectionP.x - 5.0, selfIntersectionP.y, selfIntersectionP.x + 5.0, selfIntersectionP.y));
+			g.draw(new Line2D.Double(selfIntersectionP.x, selfIntersectionP.y - 5.0, selfIntersectionP.x, selfIntersectionP.y + 5.0));
+		}
+		if (selfIntersectionQ != null) {
+			g.draw(new Line2D.Double(selfIntersectionQ.x - 5.0, selfIntersectionQ.y, selfIntersectionQ.x + 5.0, selfIntersectionQ.y));
+			g.draw(new Line2D.Double(selfIntersectionQ.x, selfIntersectionQ.y - 5.0, selfIntersectionQ.x, selfIntersectionQ.y + 5.0));
+		}
 		for (Point point : intersections) {
 			g.draw(new Line2D.Double(point.x - 5.0, point.y, point.x + 5.0, point.y));
 			g.draw(new Line2D.Double(point.x, point.y - 5.0, point.x, point.y + 5.0));
