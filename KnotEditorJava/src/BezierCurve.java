@@ -7,9 +7,10 @@ import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
@@ -32,8 +33,7 @@ public class BezierCurve {
 	 * 
 	 * See http://www.mare.ee/indrek/misc/2d.pdf for details on math
 	 */
-	public BezierCurve(double x1, double y1, double cx1, double cy1,
-			double cx2, double cy2, double x2, double y2) {
+	public BezierCurve(double x1, double y1, double cx1, double cy1, double cx2, double cy2, double x2, double y2) {
 		//Calculate the parametric form of the Bezier curve
 		a3 = -x1 + 3.0*cx1 - 3.0*cx2 + x2;
 		a2 = 3.0*x1 - 6.0*cx1 + 3.0*cx2;
@@ -44,8 +44,8 @@ public class BezierCurve {
 		b1 = -3.0*y1 + 3.0*cy1;
 		b0 = y1;
 
-		System.out.printf("x(t) = %gt^3 + %gt^2 + %gt + %g\n", a3, a2, a1, a0);
-		System.out.printf("y(t) = %gt^3 + %gt^2 + %gt + %g\n", b3, b2, b1, b0);
+		//System.out.printf("x(t) = %gt^3 + %gt^2 + %gt + %g\n", a3, a2, a1, a0);
+		//System.out.printf("y(t) = %gt^3 + %gt^2 + %gt + %g\n", b3, b2, b1, b0);
 
 		//And also find its implicit form
 		uxxx = b3*b3*b3;
@@ -59,8 +59,8 @@ public class BezierCurve {
 		uy = a0*a2*a3*b1*b3 + a1*a2*a3*b1*b2 - a0*a1*a3*b2*b3 - 6.0*a1*a2*a3*b0*b3 - a1*a1*a1*b3*b3 - 3.0*a3*a3*a3*b0*b0 - a1*a3*a3*b1*b1 - a3*a1*a1*b2*b2 - 3.0*a3*a0*a0*b3*b3 + a2*b2*b3*a1*a1 - a1*b1*b3*a2*a2 - 3.0*a0*b1*b2*a3*a3 - 2.0*a0*b2*b3*a2*a2 - 2.0*a3*b0*b2*a2*a2 + 2.0*a0*a2*a3*b2*b2 + 2.0*a2*b0*b1*a3*a3 + 2.0*a3*b1*b3*a1*a1 + 3.0*a0*a1*a2*b3*b3 + 4.0*a1*b0*b2*a3*a3 + 6.0*a0*b0*b3*a3*a3 + 2.0*b0*b3*a2*a2*a2;
 		u0 = a0*a1*a2*b1*b2*b3 + a0*a1*a3*b0*b2*b3 - a0*a2*a3*b0*b1*b3 - a1*a2*a3*b0*b1*b2 + b0*a1*a1*a1*b3*b3 - b3*a2*a2*a2*b0*b0 + a1*b0*a3*a3*b1*b1 + a1*b2*a0*a0*b3*b3 + a3*b0*a1*a1*b2*b2 + a3*b2*a2*a2*b0*b0 - a0*b1*a1*a1*b3*b3 - a0*b3*a2*a2*b1*b1 - a2*b1*a3*a3*b0*b0 - a2*b3*a0*a0*b2*b2 - 3.0*a0*b3*a3*a3*b0*b0 - 2.0*a1*b2*a3*a3*b0*b0 + 2.0*a2*b1*a0*a0*b3*b3 + 3.0*a3*b0*a0*a0*b3*b3 + a0*a2*a3*b2*b1*b1 + a1*b0*b1*b3*a2*a2 - a0*a1*a3*b1*b2*b2 - a2*b0*b2*b3*a1*a1 - 3.0*a0*a1*a2*b0*b3*b3 - 3.0*a3*b1*b2*b3*a0*a0 - 2.0*a0*a2*a3*b0*b2*b2 - 2.0*a3*b0*b1*b3*a1*a1 + 2.0*a0*a1*a3*b3*b1*b1 + 2.0*a0*b0*b2*b3*a2*a2 + 3.0*a0*b0*b1*b2*a3*a3 + 3.0*a1*a2*a3*b3*b0*b0 + a3*a3*a3*b0*b0*b0 - a0*a0*a0*b3*b3*b3 + a3*a0*a0*b2*b2*b2 - a0*a3*a3*b1*b1*b1;
 
-		System.out.printf("f(x,y) = %gx^3 + %gx^2y + %gxy^2 + %gx^2 + %gxy + %gy^2 + %gx + %gy + %g\n", uxxx, uxxy, uxyy, uyyy, uxx, uxy, uyy, ux, uy, u0);
-		System.out.println();
+		//System.out.printf("f(x,y) = %gx^3 + %gx^2y + %gxy^2 + %gx^2 + %gxy + %gy^2 + %gx + %gy + %g\n", uxxx, uxxy, uxyy, uyyy, uxx, uxy, uyy, ux, uy, u0);
+		//System.out.println();
 
 		this.x1 = x1;
 		this.y1 = y1;
@@ -72,49 +72,61 @@ public class BezierCurve {
 		this.y2 = y2;
 	}
 	
-	public Point selfIntersection() {
+	public Point pointAt(double t) {
+		return new Point(a0 + t*(a1 + t*(a2 + t*a3)), b0 + t*(b1 + t*(b2 + t*b3)));
+	}
+
+	public Set<BezierPoint> selfIntersections() {
+		Set<BezierPoint> selfIntersects = new HashSet<BezierPoint>();
+		
 		double u2 = -2.0*a2*a3*b2*b3 + a2*a2*b3*b3 + a3*a3*b2*b2;
 		double u1 = -a1*a3*b2*b3 - a2*a3*b1*b3 + a1*a2*b3*b3 + b1*b2*a3*a3;
 		double u0 = -a1*a2*b2*b3 - a2*a3*b1*b2 - 2*a1*a3*b1*b3 + a1*a1*b3*b3 + a3*a3*b1*b1 + a1*a3*b2*b2 + b1*b3*a2*a2;
 		double disc = u1*u1 - 4.0*u2*u0;
-		if (disc < 0) return null;
-		double t1 = (-u1 + Math.sqrt(disc)) / (2.0*u2);
-		double t2 = (-u1 - Math.sqrt(disc)) / (2.0*u2);
-		System.out.println("Self intersection roots at " + t1 + " and " + t2);
-		return new Point(a0 + t1*(a1 + t1*(a2 + t1*a3)), b0 + t1*(b1 + t1*(b2 + t1*b3)));
+		if (disc < 0) return selfIntersects;
+		double t1 = (-u1 - Math.sqrt(disc)) / (2.0*u2);
+		double t2 = (-u1 + Math.sqrt(disc)) / (2.0*u2);
+		//System.out.println("Self intersection roots at " + t1 + " and " + t2);
+		//System.out.println();
+		selfIntersects.add(new BezierPoint(this, t1));
+		selfIntersects.add(new BezierPoint(this, t2));
+		
+		return selfIntersects;
 	}
 
-	public Set<Point> intersections(BezierCurve other) {
-		Set<Point> intersections = new HashSet<Point>();
-		
-		//We use the implicit form of the "this" curve, and the parametric
-		//form of the "other" curve
-		
-		double oa3 = other.a3;
-		double oa2 = other.a2;
-		double oa1 = other.a1;
-		double oa0 = other.a0;
-		double ob3 = other.b3;
-		double ob2 = other.b2;
-		double ob1 = other.b1;
-		double ob0 = other.b0;
+	public Set<BezierPoint> intersections(BezierCurve other) {
+		Set<BezierPoint> intersections = new HashSet<BezierPoint>();
+
+		//We use the implicit form of the "other" curve, and the parametric
+		//form of the "this" curve
+
+		double ouxxx = other.uxxx;
+		double ouxxy = other.uxxy;
+		double ouxyy = other.uxyy;
+		double ouyyy = other.uyyy;
+		double ouxx = other.uxx;
+		double ouxy = other.uxy;
+		double ouyy = other.uyy;
+		double oux = other.ux;
+		double ouy = other.uy;
+		double ou0 = other.u0;
 
 		//This is the polynomial we need to solve to find the values of t
 		//where the intersection(s) occur
 		//p09*t^9 + p08*t^8 + ... + p01*t + p00 = 0
 
-		double p09 = oa3*uxyy*ob3*ob3 + ob3*uxxy*oa3*oa3 + uxxx*oa3*oa3*oa3 + uyyy*ob3*ob3*ob3;
-		double p08 = 2.0*oa2*oa3*ob3*uxxy + 2.0*oa3*ob2*ob3*uxyy + oa2*uxyy*ob3*ob3 + ob2*uxxy*oa3*oa3 + 3.0*oa2*uxxx*oa3*oa3 + 3.0*ob2*uyyy*ob3*ob3;
-		double p07 = 2*oa1*oa3*ob3*uxxy + 2.0*oa2*oa3*ob2*uxxy + 2.0*oa2*ob2*ob3*uxyy + 2.0*oa3*ob1*ob3*uxyy + oa1*uxyy*ob3*ob3 + oa3*uxyy*ob2*ob2 + ob1*uxxy*oa3*oa3 + ob3*uxxy*oa2*oa2 + 3.0*oa1*uxxx*oa3*oa3 + 3.0*oa3*uxxx*oa2*oa2 + 3.0*ob1*uyyy*ob3*ob3 + 3.0*ob3*uyyy*ob2*ob2;
-		double p06 = oa3*ob3*uxy + 2.0*oa0*oa3*ob3*uxxy + 2.0*oa1*oa2*ob3*uxxy + 2.0*oa1*oa3*ob2*uxxy + 2.0*oa1*ob2*ob3*uxyy + 2.0*oa2*oa3*ob1*uxxy + 2.0*oa2*ob1*ob3*uxyy + 2.0*oa3*ob0*ob3*uxyy + 2.0*oa3*ob1*ob2*uxyy + 6.0*oa1*oa2*oa3*uxxx + 6.0*ob1*ob2*ob3*uyyy + uxx*oa3*oa3 + uyy*ob3*ob3 + oa0*uxyy*ob3*ob3 + oa2*uxyy*ob2*ob2 + ob0*uxxy*oa3*oa3 + ob2*uxxy*oa2*oa2 + 3.0*oa0*uxxx*oa3*oa3 + 3.0*ob0*uyyy*ob3*ob3 + uxxx*oa2*oa2*oa2 + uyyy*ob2*ob2*ob2;
-		double p05 = oa2*ob3*uxy + oa3*ob2*uxy + 2.0*oa2*oa3*uxx + 2.0*ob2*ob3*uyy + 2.0*oa0*oa2*ob3*uxxy + 2.0*oa0*oa3*ob2*uxxy + 2.0*oa0*ob2*ob3*uxyy + 2.0*oa1*oa2*ob2*uxxy + 2.0*oa1*oa3*ob1*uxxy + 2.0*oa1*ob1*ob3*uxyy + 2.0*oa2*oa3*ob0*uxxy + 2.0*oa2*ob0*ob3*uxyy + 2.0*oa2*ob1*ob2*uxyy + 2.0*oa3*ob0*ob2*uxyy + 6.0*oa0*oa2*oa3*uxxx + 6.0*ob0*ob2*ob3*uyyy + oa1*uxyy*ob2*ob2 + oa3*uxyy*ob1*ob1 + ob1*uxxy*oa2*oa2 + ob3*uxxy*oa1*oa1 + 3.0*oa1*uxxx*oa2*oa2 + 3.0*oa3*uxxx*oa1*oa1 + 3.0*ob1*uyyy*ob2*ob2 + 3.0*ob3*uyyy*ob1*ob1;
-		double p04 = oa1*ob3*uxy + oa2*ob2*uxy + oa3*ob1*uxy + 2.0*oa1*oa3*uxx + 2.0*ob1*ob3*uyy + 2.0*oa0*oa1*ob3*uxxy + 2.0*oa0*oa2*ob2*uxxy + 2.0*oa0*oa3*ob1*uxxy + 2.0*oa0*ob1*ob3*uxyy + 2.0*oa1*oa2*ob1*uxxy + 2.0*oa1*oa3*ob0*uxxy + 2.0*oa1*ob0*ob3*uxyy + 2.0*oa1*ob1*ob2*uxyy + 2.0*oa2*ob0*ob2*uxyy + 2.0*oa3*ob0*ob1*uxyy + 6.0*oa0*oa1*oa3*uxxx + 6.0*ob0*ob1*ob3*uyyy + uxx*oa2*oa2 + uyy*ob2*ob2 + oa0*uxyy*ob2*ob2 + oa2*uxyy*ob1*ob1 + ob0*uxxy*oa2*oa2 + ob2*uxxy*oa1*oa1 + 3.0*oa0*uxxx*oa2*oa2 + 3.0*oa2*uxxx*oa1*oa1 + 3.0*ob0*uyyy*ob2*ob2 + 3.0*ob2*uyyy*ob1*ob1;
-		double p03 = oa3*ux + ob3*uy + oa0*ob3*uxy + oa1*ob2*uxy + oa2*ob1*uxy + oa3*ob0*uxy + 2.0*oa0*oa3*uxx + 2.0*oa1*oa2*uxx + 2.0*ob0*ob3*uyy + 2.0*ob1*ob2*uyy + 2.0*oa0*oa1*ob2*uxxy + 2.0*oa0*oa2*ob1*uxxy + 2.0*oa0*oa3*ob0*uxxy + 2.0*oa0*ob0*ob3*uxyy + 2.0*oa0*ob1*ob2*uxyy + 2.0*oa1*oa2*ob0*uxxy + 2.0*oa1*ob0*ob2*uxyy + 2.0*oa2*ob0*ob1*uxyy + 6.0*oa0*oa1*oa2*uxxx + 6.0*ob0*ob1*ob2*uyyy + oa1*uxyy*ob1*ob1 + oa3*uxyy*ob0*ob0 + ob1*uxxy*oa1*oa1 + ob3*uxxy*oa0*oa0 + 3.0*oa3*uxxx*oa0*oa0 + 3.0*ob3*uyyy*ob0*ob0 + uxxx*oa1*oa1*oa1 + uyyy*ob1*ob1*ob1;
-		double p02 = oa2*ux + ob2*uy + oa0*ob2*uxy + oa1*ob1*uxy + oa2*ob0*uxy + 2.0*oa0*oa2*uxx + 2.0*ob0*ob2*uyy + 2.0*oa0*oa1*ob1*uxxy + 2.0*oa0*oa2*ob0*uxxy + 2.0*oa0*ob0*ob2*uxyy + 2.0*oa1*ob0*ob1*uxyy + uxx*oa1*oa1 + uyy*ob1*ob1 + oa0*uxyy*ob1*ob1 + oa2*uxyy*ob0*ob0 + ob0*uxxy*oa1*oa1 + ob2*uxxy*oa0*oa0 + 3.0*oa0*uxxx*oa1*oa1 + 3.0*oa2*uxxx*oa0*oa0 + 3.0*ob0*uyyy*ob1*ob1 + 3.0*ob2*uyyy*ob0*ob0;
-		double p01 = oa1*ux + ob1*uy + oa0*ob1*uxy + oa1*ob0*uxy + 2.0*oa0*oa1*uxx + 2.0*ob0*ob1*uyy + 2.0*oa0*oa1*ob0*uxxy + 2.0*oa0*ob0*ob1*uxyy + oa1*uxyy*ob0*ob0 + ob1*uxxy*oa0*oa0 + 3.0*oa1*uxxx*oa0*oa0 + 3.0*ob1*uyyy*ob0*ob0;
-		double p00 = u0 + oa0*ux + ob0*uy + oa0*ob0*uxy + uxx*oa0*oa0 + uyy*ob0*ob0 + oa0*uxyy*ob0*ob0 + ob0*uxxy*oa0*oa0 + uxxx*oa0*oa0*oa0 + uyyy*ob0*ob0*ob0;
+		double p09 = a3*ouxyy*b3*b3 + b3*ouxxy*a3*a3 + ouxxx*a3*a3*a3 + ouyyy*b3*b3*b3;
+		double p08 = 2.0*a2*a3*b3*ouxxy + 2.0*a3*b2*b3*ouxyy + a2*ouxyy*b3*b3 + b2*ouxxy*a3*a3 + 3.0*a2*ouxxx*a3*a3 + 3.0*b2*ouyyy*b3*b3;
+		double p07 = 2*a1*a3*b3*ouxxy + 2.0*a2*a3*b2*ouxxy + 2.0*a2*b2*b3*ouxyy + 2.0*a3*b1*b3*ouxyy + a1*ouxyy*b3*b3 + a3*ouxyy*b2*b2 + b1*ouxxy*a3*a3 + b3*ouxxy*a2*a2 + 3.0*a1*ouxxx*a3*a3 + 3.0*a3*ouxxx*a2*a2 + 3.0*b1*ouyyy*b3*b3 + 3.0*b3*ouyyy*b2*b2;
+		double p06 = a3*b3*ouxy + 2.0*a0*a3*b3*ouxxy + 2.0*a1*a2*b3*ouxxy + 2.0*a1*a3*b2*ouxxy + 2.0*a1*b2*b3*ouxyy + 2.0*a2*a3*b1*ouxxy + 2.0*a2*b1*b3*ouxyy + 2.0*a3*b0*b3*ouxyy + 2.0*a3*b1*b2*ouxyy + 6.0*a1*a2*a3*ouxxx + 6.0*b1*b2*b3*ouyyy + ouxx*a3*a3 + ouyy*b3*b3 + a0*ouxyy*b3*b3 + a2*ouxyy*b2*b2 + b0*ouxxy*a3*a3 + b2*ouxxy*a2*a2 + 3.0*a0*ouxxx*a3*a3 + 3.0*b0*ouyyy*b3*b3 + ouxxx*a2*a2*a2 + ouyyy*b2*b2*b2;
+		double p05 = a2*b3*ouxy + a3*b2*ouxy + 2.0*a2*a3*ouxx + 2.0*b2*b3*ouyy + 2.0*a0*a2*b3*ouxxy + 2.0*a0*a3*b2*ouxxy + 2.0*a0*b2*b3*ouxyy + 2.0*a1*a2*b2*ouxxy + 2.0*a1*a3*b1*ouxxy + 2.0*a1*b1*b3*ouxyy + 2.0*a2*a3*b0*ouxxy + 2.0*a2*b0*b3*ouxyy + 2.0*a2*b1*b2*ouxyy + 2.0*a3*b0*b2*ouxyy + 6.0*a0*a2*a3*ouxxx + 6.0*b0*b2*b3*ouyyy + a1*ouxyy*b2*b2 + a3*ouxyy*b1*b1 + b1*ouxxy*a2*a2 + b3*ouxxy*a1*a1 + 3.0*a1*ouxxx*a2*a2 + 3.0*a3*ouxxx*a1*a1 + 3.0*b1*ouyyy*b2*b2 + 3.0*b3*ouyyy*b1*b1;
+		double p04 = a1*b3*ouxy + a2*b2*ouxy + a3*b1*ouxy + 2.0*a1*a3*ouxx + 2.0*b1*b3*ouyy + 2.0*a0*a1*b3*ouxxy + 2.0*a0*a2*b2*ouxxy + 2.0*a0*a3*b1*ouxxy + 2.0*a0*b1*b3*ouxyy + 2.0*a1*a2*b1*ouxxy + 2.0*a1*a3*b0*ouxxy + 2.0*a1*b0*b3*ouxyy + 2.0*a1*b1*b2*ouxyy + 2.0*a2*b0*b2*ouxyy + 2.0*a3*b0*b1*ouxyy + 6.0*a0*a1*a3*ouxxx + 6.0*b0*b1*b3*ouyyy + ouxx*a2*a2 + ouyy*b2*b2 + a0*ouxyy*b2*b2 + a2*ouxyy*b1*b1 + b0*ouxxy*a2*a2 + b2*ouxxy*a1*a1 + 3.0*a0*ouxxx*a2*a2 + 3.0*a2*ouxxx*a1*a1 + 3.0*b0*ouyyy*b2*b2 + 3.0*b2*ouyyy*b1*b1;
+		double p03 = a3*oux + b3*ouy + a0*b3*ouxy + a1*b2*ouxy + a2*b1*ouxy + a3*b0*ouxy + 2.0*a0*a3*ouxx + 2.0*a1*a2*ouxx + 2.0*b0*b3*ouyy + 2.0*b1*b2*ouyy + 2.0*a0*a1*b2*ouxxy + 2.0*a0*a2*b1*ouxxy + 2.0*a0*a3*b0*ouxxy + 2.0*a0*b0*b3*ouxyy + 2.0*a0*b1*b2*ouxyy + 2.0*a1*a2*b0*ouxxy + 2.0*a1*b0*b2*ouxyy + 2.0*a2*b0*b1*ouxyy + 6.0*a0*a1*a2*ouxxx + 6.0*b0*b1*b2*ouyyy + a1*ouxyy*b1*b1 + a3*ouxyy*b0*b0 + b1*ouxxy*a1*a1 + b3*ouxxy*a0*a0 + 3.0*a3*ouxxx*a0*a0 + 3.0*b3*ouyyy*b0*b0 + ouxxx*a1*a1*a1 + ouyyy*b1*b1*b1;
+		double p02 = a2*oux + b2*ouy + a0*b2*ouxy + a1*b1*ouxy + a2*b0*ouxy + 2.0*a0*a2*ouxx + 2.0*b0*b2*ouyy + 2.0*a0*a1*b1*ouxxy + 2.0*a0*a2*b0*ouxxy + 2.0*a0*b0*b2*ouxyy + 2.0*a1*b0*b1*ouxyy + ouxx*a1*a1 + ouyy*b1*b1 + a0*ouxyy*b1*b1 + a2*ouxyy*b0*b0 + b0*ouxxy*a1*a1 + b2*ouxxy*a0*a0 + 3.0*a0*ouxxx*a1*a1 + 3.0*a2*ouxxx*a0*a0 + 3.0*b0*ouyyy*b1*b1 + 3.0*b2*ouyyy*b0*b0;
+		double p01 = a1*oux + b1*ouy + a0*b1*ouxy + a1*b0*ouxy + 2.0*a0*a1*ouxx + 2.0*b0*b1*ouyy + 2.0*a0*a1*b0*ouxxy + 2.0*a0*b0*b1*ouxyy + a1*ouxyy*b0*b0 + b1*ouxxy*a0*a0 + 3.0*a1*ouxxx*a0*a0 + 3.0*b1*ouyyy*b0*b0;
+		double p00 = ou0 + a0*oux + b0*ouy + a0*b0*ouxy + ouxx*a0*a0 + ouyy*b0*b0 + a0*ouxyy*b0*b0 + b0*ouxxy*a0*a0 + ouxxx*a0*a0*a0 + ouyyy*b0*b0*b0;
 
-		System.out.printf("p0(t) = %gt^9 + %gt^8 + %gt^7 + %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p09, p08, p07, p06, p05, p04, p03, p02, p01, p00);
+		//System.out.printf("p0(t) = %gt^9 + %gt^8 + %gt^7 + %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p09, p08, p07, p06, p05, p04, p03, p02, p01, p00);
 
 		//We do so using Sturm's method
 
@@ -128,7 +140,7 @@ public class BezierCurve {
 		double p11 = 2.0*p02;
 		double p10 = p01;
 
-		System.out.printf("p1(t) = %gt^8 + %gt^7 + %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p18, p17, p16, p15, p14, p13, p12, p11, p10);
+		//System.out.printf("p1(t) = %gt^8 + %gt^7 + %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p18, p17, p16, p15, p14, p13, p12, p11, p10);
 
 		double p20 = -(p00 + (p09*p10*p17) / (p18*p18) - (p08*p10) / p18);
 		double p21 = -(p01 + (p09*p11*p17) / (p18*p18) - (p09*p10) / p18 - (p08*p11) / p18);
@@ -139,7 +151,7 @@ public class BezierCurve {
 		double p26 = -(p06 + (p09*p16*p17) / (p18*p18) - (p09*p15) / p18 - (p08*p16) / p18);
 		double p27 = -(p07 + (p09*p17*p17) / (p18*p18) - (p09*p16) / p18 - (p08*p17) / p18);
 
-		System.out.printf("p2(t) = %gt^7 + %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p27, p26, p25, p24, p23, p22, p21, p20);
+		//System.out.printf("p2(t) = %gt^7 + %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p27, p26, p25, p24, p23, p22, p21, p20);
 
 		double p30 = -(p10 + (p18*p20*p26) / (p27*p27) - (p17*p20) / p27);
 		double p31 = -(p11 + (p18*p21*p26) / (p27*p27) - (p18*p20) / p27 - (p17*p21) / p27);
@@ -149,7 +161,7 @@ public class BezierCurve {
 		double p35 = -(p15 + (p18*p25*p26) / (p27*p27) - (p18*p24) / p27 - (p17*p25) / p27);
 		double p36 = -(p16 + (p18*p26*p26) / (p27*p27) - (p18*p25) / p27 - (p17*p26) / p27);
 
-		System.out.printf("p3(t) = %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p36, p35, p34, p33, p32, p31, p30);
+		//System.out.printf("p3(t) = %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p36, p35, p34, p33, p32, p31, p30);
 
 		double p40 = -(p20 + (p27*p30*p35) / (p36*p36) - (p26*p30) / p36);
 		double p41 = -(p21 + (p27*p31*p35) / (p36*p36) - (p27*p30) / p36 - (p26*p31) / p36);
@@ -158,7 +170,7 @@ public class BezierCurve {
 		double p44 = -(p24 + (p27*p34*p35) / (p36*p36) - (p27*p33) / p36 - (p26*p34) / p36);
 		double p45 = -(p25 + (p27*p35*p35) / (p36*p36) - (p27*p34) / p36 - (p26*p35) / p36);
 
-		System.out.printf("p4(t) = %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p45, p44, p43, p42, p41, p40);
+		//System.out.printf("p4(t) = %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p45, p44, p43, p42, p41, p40);
 
 		double p50 = -(p30 + (p36*p40*p44) / (p45*p45) - (p35*p40) / p45);
 		double p51 = -(p31 + (p36*p41*p44) / (p45*p45) - (p36*p40) / p45 - (p35*p41) / p45);
@@ -166,44 +178,44 @@ public class BezierCurve {
 		double p53 = -(p33 + (p36*p43*p44) / (p45*p45) - (p36*p42) / p45 - (p35*p43) / p45);
 		double p54 = -(p34 + (p36*p44*p44) / (p45*p45) - (p36*p43) / p45 - (p35*p44) / p45);
 
-		System.out.printf("p5(t) = %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p54, p53, p52, p51, p50);
+		//System.out.printf("p5(t) = %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p54, p53, p52, p51, p50);
 
 		double p60 = -(p40 + (p45*p50*p53) / (p54*p54) - (p44*p50) / p54);
 		double p61 = -(p41 + (p45*p51*p53) / (p54*p54) - (p45*p50) / p54 - (p44*p51) / p54);
 		double p62 = -(p42 + (p45*p52*p53) / (p54*p54) - (p45*p51) / p54 - (p44*p52) / p54);
 		double p63 = -(p43 + (p45*p53*p53) / (p54*p54) - (p45*p52) / p54 - (p44*p53) / p54);
 
-		System.out.printf("p6(t) = %gt^3 + %gt^2 + %gt + %g\n", p63, p62, p61, p60);
+		//System.out.printf("p6(t) = %gt^3 + %gt^2 + %gt + %g\n", p63, p62, p61, p60);
 
 		double p70 = -(p50 + (p54*p60*p62) / (p63*p63) - (p53*p60) / p63);
 		double p71 = -(p51 + (p54*p61*p62) / (p63*p63) - (p54*p60) / p63 - (p53*p61) / p63);
 		double p72 = -(p52 + (p54*p62*p62) / (p63*p63) - (p54*p61) / p63 - (p53*p62) / p63);
 
-		System.out.printf("p7(t) = %gt^2 + %gt + %g\n", p72, p71, p70);
+		//System.out.printf("p7(t) = %gt^2 + %gt + %g\n", p72, p71, p70);
 
 		double p80 = -(p60 + (p63*p70*p71) / (p72*p72) - (p62*p70) / p72);
 		double p81 = -(p61 + (p63*p71*p71) / (p72*p72) - (p63*p70) / p72 - (p62*p71) / p72);
 
-		System.out.printf("p8(t) = %gt + %g\n", p81, p80);
+		//System.out.printf("p8(t) = %gt + %g\n", p81, p80);
 
 		double p90 = -(p70 + (p72*p80*p80) / (p81*p81) - (p71*p80) / p81);
 
-		System.out.printf("p9(t) = %g\n", p90);
-		System.out.println();
+		//System.out.printf("p9(t) = %g\n", p90);
+		//System.out.println();
 
 		//Valid roots are only those in the t range [0, 1], so we start our
 		//search range as that
 		Set<Double> roots = new HashSet<Double>();
-		TreeMap<Double, Double> ranges = new TreeMap<Double, Double>();
+		Map<Double, Double> ranges = new HashMap<Double, Double>();
 		ranges.put(0.0, 1.0);
 
 		while (!ranges.isEmpty()) {
-			double start = ranges.firstKey();
+			double start = ranges.keySet().toArray(new Double[0])[0];
 			double end = ranges.get(start);
-			
+
 			//We can remove this range from the queue
 			ranges.remove(start);
-			
+
 			//Evaluate the polynomials using a Horner scheme
 			double startp0 = p00 + start*(p01 + start*(p02 + start*(p03 + start*(p04 + start*(p05 + start*(p06 + start*(p07 + start*(p08 + start*p09))))))));
 			double startp1 = p10 + start*(p11 + start*(p12 + start*(p13 + start*(p14 + start*(p15 + start*(p16 + start*(p17 + start*p18)))))));
@@ -225,11 +237,11 @@ public class BezierCurve {
 			double endp7 = p70 + end*(p71 + end*p72);
 			double endp8 = p80 + end*p81;
 			double endp9 = p90;
-			
+
 			//And count the number of sign changes that occur in the range
 			int startsignchange = ((startp0 >= 0.0) == (startp1 >= 0.0) ? 0 : 1) + ((startp1 >= 0.0) == (startp2 >= 0.0) ? 0 : 1) + ((startp2 >= 0.0) == (startp3 >= 0.0) ? 0 : 1) + ((startp3 >= 0.0) == (startp4 >= 0.0) ? 0 : 1) + ((startp4 >= 0.0) == (startp5 >= 0.0) ? 0 : 1) + ((startp5 >= 0.0) == (startp6 >= 0.0) ? 0 : 1) + ((startp6 >= 0.0) == (startp7 >= 0.0) ? 0 : 1) + ((startp7 >= 0.0) == (startp8 >= 0.0) ? 0 : 1) + ((startp8 >= 0.0) == (startp9 >= 0.0) ? 0 : 1);
 			int endsignchange = ((endp0 >= 0.0) == (endp1 >= 0.0) ? 0 : 1) + ((endp1 >= 0.0) == (endp2 >= 0.0) ? 0 : 1) + ((endp2 >= 0.0) == (endp3 >= 0.0) ? 0 : 1) + ((endp3 >= 0.0) == (endp4 >= 0.0) ? 0 : 1) + ((endp4 >= 0.0) == (endp5 >= 0.0) ? 0 : 1) + ((endp5 >= 0.0) == (endp6 >= 0.0) ? 0 : 1) + ((endp6 >= 0.0) == (endp7 >= 0.0) ? 0 : 1) + ((endp7 >= 0.0) == (endp8 >= 0.0) ? 0 : 1) + ((endp8 >= 0.0) == (endp9 >= 0.0) ? 0 : 1);
-			
+
 			//The number of roots in the range is the difference between the
 			//sign change counts
 			int nroots = Math.abs(startsignchange - endsignchange);
@@ -243,29 +255,99 @@ public class BezierCurve {
 				}
 			}
 		}
-		System.out.println("Intersection roots at " + roots);
+		//System.out.println("Intersection roots at " + roots);
+		//System.out.println();
 
 		for (double t : roots) {
 			//Again, use a Horner scheme to evaluate the polynomials for the curve
-		    	//Remember that we need to use the parametric equation of the "other"
-		    	//curve for this, since the "this" curve was implicitized
-			intersections.add(new Point(oa0 + t*(oa1 + t*(oa2 + t*oa3)), ob0 + t*(ob1 + t*(ob2 + t*ob3))));
+			//Remember that we need to use the parametric equation of the "this"
+			//curve for this, since the "other" curve was implicitized
+			intersections.add(new BezierPoint(this, t));
 		}
 		return intersections;
 	}
+	
+	public Bounds getControlBounds() {
+		return new Bounds(Math.min(Math.min(x1, x2), Math.min(cx1, cx2)), Math.max(Math.max(x1, x2), Math.max(cx1, cx2)), Math.min(Math.min(y1, y2), Math.min(cy1, cy2)), Math.max(Math.max(y1, y2), Math.max(cy1, cy2)));
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(cx1);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(cx2);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(cy1);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(cy2);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(x1);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(x2);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(y1);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(y2);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BezierCurve other = (BezierCurve) obj;
+		if (Double.doubleToLongBits(cx1) != Double.doubleToLongBits(other.cx1))
+			return false;
+		if (Double.doubleToLongBits(cx2) != Double.doubleToLongBits(other.cx2))
+			return false;
+		if (Double.doubleToLongBits(cy1) != Double.doubleToLongBits(other.cy1))
+			return false;
+		if (Double.doubleToLongBits(cy2) != Double.doubleToLongBits(other.cy2))
+			return false;
+		if (Double.doubleToLongBits(x1) != Double.doubleToLongBits(other.x1))
+			return false;
+		if (Double.doubleToLongBits(x2) != Double.doubleToLongBits(other.x2))
+			return false;
+		if (Double.doubleToLongBits(y1) != Double.doubleToLongBits(other.y1))
+			return false;
+		if (Double.doubleToLongBits(y2) != Double.doubleToLongBits(other.y2))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "(" + x1 + ", " + x1 + ")--(" + cx1 + ", " + cy1 + ")--(" + cx2 + ", " + cy2 + ")--(" + x2 + ", " + y2 + ")";
+	}
 
 	public static void main(String[] args) {
+		//Nine intersections here
 		//BezierCurve p = new BezierCurve(0, 1000, 333, -2000, 666, 3000, 1000, 0);
 		//BezierCurve q = new BezierCurve(0, 0, 3000, 333, -2000, 666, 1000, 1000);
-		BezierCurve p = new BezierCurve(0, 1000, 1000, -300, 0, -300, 750, 1000);
-		BezierCurve q = new BezierCurve(0, 0, 1250, 1500, -1000, 1000, 1000, 0);
-		Point selfIntersectionP = p.selfIntersection();
-		Point selfIntersectionQ = q.selfIntersection();
+
+		//Self intersection tests
+		BezierCurve p = new BezierCurve(0, 1000, 1500, -300, -500, -300, 750, 1000);
+		BezierCurve q = new BezierCurve(0, 0, 1750, 1500, -1000, 1000, 1000, 0);
+		System.out.println("P = " + p);
+		System.out.println("Q = " + q);
+		
+		long startTime = System.currentTimeMillis();
+		BezierIntersection selfIntersectionP = BezierIntersection.createSelfIntersection(p);
+		BezierIntersection selfIntersectionQ = BezierIntersection.createSelfIntersection(q);
+		Set<BezierPoint> intersections = p.intersections(q);
+		System.out.println("Computation took " + (System.currentTimeMillis() - startTime) + " ms");
 		System.out.println("P intersects itself at " + selfIntersectionP);
 		System.out.println("Q intersects itself at " + selfIntersectionQ);
-		System.out.println();
-		Set<Point> intersections = q.intersections(p);
-		System.out.println("Intersections at " + intersections);
+		System.out.println("P and Q intersect at " + intersections);
+		
 		BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = img.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
@@ -278,14 +360,14 @@ public class BezierCurve {
 		g.setStroke(new BasicStroke(2));
 		g.setColor(Color.RED);
 		if (selfIntersectionP != null) {
-			g.draw(new Line2D.Double(selfIntersectionP.x - 5.0, selfIntersectionP.y, selfIntersectionP.x + 5.0, selfIntersectionP.y));
-			g.draw(new Line2D.Double(selfIntersectionP.x, selfIntersectionP.y - 5.0, selfIntersectionP.x, selfIntersectionP.y + 5.0));
+			g.draw(new Line2D.Double(selfIntersectionP.pIntersect.x - 5.0, selfIntersectionP.pIntersect.y, selfIntersectionP.pIntersect.x + 5.0, selfIntersectionP.pIntersect.y));
+			g.draw(new Line2D.Double(selfIntersectionP.pIntersect.x, selfIntersectionP.pIntersect.y - 5.0, selfIntersectionP.pIntersect.x, selfIntersectionP.pIntersect.y + 5.0));
 		}
 		if (selfIntersectionQ != null) {
-			g.draw(new Line2D.Double(selfIntersectionQ.x - 5.0, selfIntersectionQ.y, selfIntersectionQ.x + 5.0, selfIntersectionQ.y));
-			g.draw(new Line2D.Double(selfIntersectionQ.x, selfIntersectionQ.y - 5.0, selfIntersectionQ.x, selfIntersectionQ.y + 5.0));
+			g.draw(new Line2D.Double(selfIntersectionQ.pIntersect.x - 5.0, selfIntersectionQ.pIntersect.y, selfIntersectionQ.pIntersect.x + 5.0, selfIntersectionQ.pIntersect.y));
+			g.draw(new Line2D.Double(selfIntersectionQ.pIntersect.x, selfIntersectionQ.pIntersect.y - 5.0, selfIntersectionQ.pIntersect.x, selfIntersectionQ.pIntersect.y + 5.0));
 		}
-		for (Point point : intersections) {
+		for (BezierPoint point : intersections) {
 			g.draw(new Line2D.Double(point.x - 5.0, point.y, point.x + 5.0, point.y));
 			g.draw(new Line2D.Double(point.x, point.y - 5.0, point.x, point.y + 5.0));
 		}

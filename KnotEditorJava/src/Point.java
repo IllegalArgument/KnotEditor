@@ -8,6 +8,17 @@ public class Point {
 		this.y = y;
 	}
 	
+	public Point(Point p) {
+		this.x = p.x;
+		this.y = p.y;
+	}
+	
+	public double distance(Point p) {
+		double dx = p.x - x;
+		double dy = p.y - y;
+		return Math.sqrt(dx*dx + dy*dy);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
