@@ -6,6 +6,8 @@ import java.util.TreeSet;
 
 public class BezierIntersection {
 	
+	public static final double TOLERABILITY_FACTOR = 0.01 / BezierCurve.EPSILON;
+	
 	public final BezierCurve p, q;
 	public final BezierPoint pIntersect, qIntersect;
 	
@@ -35,13 +37,23 @@ public class BezierIntersection {
 		
 		Set<BezierPoint> pIntersects = p.intersections(q);
 		Set<BezierPoint> qIntersects = q.intersections(p);
-		for (BezierPoint pIntersect : pIntersects) {
-			BezierPoint qIntersect = null;
-			for (BezierPoint test : qIntersects) {
-				if (pIntersect.distance(test) < 1.0) {
-					qIntersect = test;
-					break;
+		for (final BezierPoint pIntersect : pIntersects) {
+			if (qIntersects.isEmpty()) {
+				continue;
+			}
+			TreeSet<BezierPoint> sorted = new TreeSet<BezierPoint>(new Comparator<BezierPoint>() {
+				@Override
+				public int compare(BezierPoint o1, BezierPoint o2) {
+					return pIntersect.distance(o1) - pIntersect.distance(o2) > 0.0 ? 1 : -1;
 				}
+			});
+			sorted.addAll(qIntersects);
+			BezierPoint qIntersect = sorted.first();
+			Bounds pBounds = p.getControlBounds();
+			Bounds qBounds = q.getControlBounds();
+			double maxDistance = Math.max(Math.max(pBounds.width(), qBounds.width()), Math.max(pBounds.height(), qBounds.height())) / TOLERABILITY_FACTOR;
+			if (pIntersect.distance(qIntersect) > maxDistance) {
+				continue;
 			}
 			intersections.add(new BezierIntersection(p, q, pIntersect, qIntersect));
 		}

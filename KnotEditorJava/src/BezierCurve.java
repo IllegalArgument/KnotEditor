@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
 
 public class BezierCurve {
 
-	private static final double EPSILON = 0.00000000001;
+	public static final double EPSILON = 0.00000000001;
 
 	//initial control points
 	public final double x1, y1, cx1, cy1, cx2, cy2, x2, y2;
@@ -44,8 +44,8 @@ public class BezierCurve {
 		b1 = -3.0*y1 + 3.0*cy1;
 		b0 = y1;
 
-		System.out.printf("x(t) = %gt^3 + %gt^2 + %gt + %g\n", a3, a2, a1, a0);
-		System.out.printf("y(t) = %gt^3 + %gt^2 + %gt + %g\n", b3, b2, b1, b0);
+		//System.out.printf("x(t) = %gt^3 + %gt^2 + %gt + %g\n", a3, a2, a1, a0);
+		//System.out.printf("y(t) = %gt^3 + %gt^2 + %gt + %g\n", b3, b2, b1, b0);
 
 		//And also find its implicit form
 		uxxx = b3*b3*b3;
@@ -59,8 +59,8 @@ public class BezierCurve {
 		uy = a0*a2*a3*b1*b3 + a1*a2*a3*b1*b2 - a0*a1*a3*b2*b3 - 6.0*a1*a2*a3*b0*b3 - a1*a1*a1*b3*b3 - 3.0*a3*a3*a3*b0*b0 - a1*a3*a3*b1*b1 - a3*a1*a1*b2*b2 - 3.0*a3*a0*a0*b3*b3 + a2*b2*b3*a1*a1 - a1*b1*b3*a2*a2 - 3.0*a0*b1*b2*a3*a3 - 2.0*a0*b2*b3*a2*a2 - 2.0*a3*b0*b2*a2*a2 + 2.0*a0*a2*a3*b2*b2 + 2.0*a2*b0*b1*a3*a3 + 2.0*a3*b1*b3*a1*a1 + 3.0*a0*a1*a2*b3*b3 + 4.0*a1*b0*b2*a3*a3 + 6.0*a0*b0*b3*a3*a3 + 2.0*b0*b3*a2*a2*a2;
 		u0 = a0*a1*a2*b1*b2*b3 + a0*a1*a3*b0*b2*b3 - a0*a2*a3*b0*b1*b3 - a1*a2*a3*b0*b1*b2 + b0*a1*a1*a1*b3*b3 - b3*a2*a2*a2*b0*b0 + a1*b0*a3*a3*b1*b1 + a1*b2*a0*a0*b3*b3 + a3*b0*a1*a1*b2*b2 + a3*b2*a2*a2*b0*b0 - a0*b1*a1*a1*b3*b3 - a0*b3*a2*a2*b1*b1 - a2*b1*a3*a3*b0*b0 - a2*b3*a0*a0*b2*b2 - 3.0*a0*b3*a3*a3*b0*b0 - 2.0*a1*b2*a3*a3*b0*b0 + 2.0*a2*b1*a0*a0*b3*b3 + 3.0*a3*b0*a0*a0*b3*b3 + a0*a2*a3*b2*b1*b1 + a1*b0*b1*b3*a2*a2 - a0*a1*a3*b1*b2*b2 - a2*b0*b2*b3*a1*a1 - 3.0*a0*a1*a2*b0*b3*b3 - 3.0*a3*b1*b2*b3*a0*a0 - 2.0*a0*a2*a3*b0*b2*b2 - 2.0*a3*b0*b1*b3*a1*a1 + 2.0*a0*a1*a3*b3*b1*b1 + 2.0*a0*b0*b2*b3*a2*a2 + 3.0*a0*b0*b1*b2*a3*a3 + 3.0*a1*a2*a3*b3*b0*b0 + a3*a3*a3*b0*b0*b0 - a0*a0*a0*b3*b3*b3 + a3*a0*a0*b2*b2*b2 - a0*a3*a3*b1*b1*b1;
 
-		System.out.printf("f(x,y) = %gx^3 + %gx^2y + %gxy^2 + %gy^3 + %gx^2 + %gxy + %gy^2 + %gx + %gy + %g\n", uxxx, uxxy, uxyy, uyyy, uxx, uxy, uyy, ux, uy, u0);
-		System.out.println();
+		//System.out.printf("f(x,y) = %gx^3 + %gx^2y + %gxy^2 + %gy^3 + %gx^2 + %gxy + %gy^2 + %gx + %gy + %g\n", uxxx, uxxy, uxyy, uyyy, uxx, uxy, uyy, ux, uy, u0);
+		//System.out.println();
 
 		this.x1 = x1;
 		this.y1 = y1;
@@ -83,9 +83,14 @@ public class BezierCurve {
 		double u1 = -a1*a3*b2*b3 - a2*a3*b1*b3 + a1*a2*b3*b3 + b1*b2*a3*a3;
 		double u0 = -a1*a2*b2*b3 - a2*a3*b1*b2 - 2*a1*a3*b1*b3 + a1*a1*b3*b3 + a3*a3*b1*b1 + a1*a3*b2*b2 + b1*b3*a2*a2;
 		double disc = u1*u1 - 4.0*u2*u0;
-		if (disc < 0) return selfIntersects;
+		if (disc < 0) {
+			return selfIntersects;
+		}
 		double t1 = (-u1 - Math.sqrt(disc)) / (2.0*u2);
 		double t2 = (-u1 + Math.sqrt(disc)) / (2.0*u2);
+		if (t1 < 0.0 || t1 > 1.0 || t2 < 0.0 || t2 > 1.0) {
+			return selfIntersects;
+		}
 		//System.out.println("Self intersection roots at " + t1 + " and " + t2);
 		//System.out.println();
 		selfIntersects.add(new BezierPoint(this, t1));
@@ -154,8 +159,8 @@ public class BezierCurve {
 			for (degree = degrees[current]; Math.abs(sturmChain[next][degree]) == 0.0; degree--) ;
 			degrees[next] = degree;
 		}
-		//System.out.println("Sturm coefficients are:\n" + Arrays.deepToString(sturmChain).replace("], [", "]\n["));
-		//System.out.println();
+		//System.out.println("Sturm coefficients are:");
+		//System.out.println(Arrays.deepToString(sturmChain).replace("], [", "]\n["));
 
 		//Valid roots are only those in the t range [0, 1], so we start our
 		//search range as that
@@ -210,13 +215,12 @@ public class BezierCurve {
 				}
 			}
 		}
-		//System.out.println("Intersection roots at " + roots);
-		//System.out.println();
 
 		for (double t : roots) {
 			//Remember, the t values for the roots are on this curve, not the other
 			intersections.add(new BezierPoint(this, t));
 		}
+		//System.out.println("Intersections at " + intersections);
 		return intersections;
 	}
 	
