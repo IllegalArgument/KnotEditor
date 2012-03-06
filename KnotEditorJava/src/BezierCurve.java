@@ -44,8 +44,8 @@ public class BezierCurve {
 		b1 = -3.0*y1 + 3.0*cy1;
 		b0 = y1;
 
-		//System.out.printf("x(t) = %gt^3 + %gt^2 + %gt + %g\n", a3, a2, a1, a0);
-		//System.out.printf("y(t) = %gt^3 + %gt^2 + %gt + %g\n", b3, b2, b1, b0);
+		System.out.printf("x(t) = %gt^3 + %gt^2 + %gt + %g\n", a3, a2, a1, a0);
+		System.out.printf("y(t) = %gt^3 + %gt^2 + %gt + %g\n", b3, b2, b1, b0);
 
 		//And also find its implicit form
 		uxxx = b3*b3*b3;
@@ -59,8 +59,8 @@ public class BezierCurve {
 		uy = a0*a2*a3*b1*b3 + a1*a2*a3*b1*b2 - a0*a1*a3*b2*b3 - 6.0*a1*a2*a3*b0*b3 - a1*a1*a1*b3*b3 - 3.0*a3*a3*a3*b0*b0 - a1*a3*a3*b1*b1 - a3*a1*a1*b2*b2 - 3.0*a3*a0*a0*b3*b3 + a2*b2*b3*a1*a1 - a1*b1*b3*a2*a2 - 3.0*a0*b1*b2*a3*a3 - 2.0*a0*b2*b3*a2*a2 - 2.0*a3*b0*b2*a2*a2 + 2.0*a0*a2*a3*b2*b2 + 2.0*a2*b0*b1*a3*a3 + 2.0*a3*b1*b3*a1*a1 + 3.0*a0*a1*a2*b3*b3 + 4.0*a1*b0*b2*a3*a3 + 6.0*a0*b0*b3*a3*a3 + 2.0*b0*b3*a2*a2*a2;
 		u0 = a0*a1*a2*b1*b2*b3 + a0*a1*a3*b0*b2*b3 - a0*a2*a3*b0*b1*b3 - a1*a2*a3*b0*b1*b2 + b0*a1*a1*a1*b3*b3 - b3*a2*a2*a2*b0*b0 + a1*b0*a3*a3*b1*b1 + a1*b2*a0*a0*b3*b3 + a3*b0*a1*a1*b2*b2 + a3*b2*a2*a2*b0*b0 - a0*b1*a1*a1*b3*b3 - a0*b3*a2*a2*b1*b1 - a2*b1*a3*a3*b0*b0 - a2*b3*a0*a0*b2*b2 - 3.0*a0*b3*a3*a3*b0*b0 - 2.0*a1*b2*a3*a3*b0*b0 + 2.0*a2*b1*a0*a0*b3*b3 + 3.0*a3*b0*a0*a0*b3*b3 + a0*a2*a3*b2*b1*b1 + a1*b0*b1*b3*a2*a2 - a0*a1*a3*b1*b2*b2 - a2*b0*b2*b3*a1*a1 - 3.0*a0*a1*a2*b0*b3*b3 - 3.0*a3*b1*b2*b3*a0*a0 - 2.0*a0*a2*a3*b0*b2*b2 - 2.0*a3*b0*b1*b3*a1*a1 + 2.0*a0*a1*a3*b3*b1*b1 + 2.0*a0*b0*b2*b3*a2*a2 + 3.0*a0*b0*b1*b2*a3*a3 + 3.0*a1*a2*a3*b3*b0*b0 + a3*a3*a3*b0*b0*b0 - a0*a0*a0*b3*b3*b3 + a3*a0*a0*b2*b2*b2 - a0*a3*a3*b1*b1*b1;
 
-		//System.out.printf("f(x,y) = %gx^3 + %gx^2y + %gxy^2 + %gx^2 + %gxy + %gy^2 + %gx + %gy + %g\n", uxxx, uxxy, uxyy, uyyy, uxx, uxy, uyy, ux, uy, u0);
-		//System.out.println();
+		System.out.printf("f(x,y) = %gx^3 + %gx^2y + %gxy^2 + %gy^3 + %gx^2 + %gxy + %gy^2 + %gx + %gy + %g\n", uxxx, uxxy, uxyy, uyyy, uxx, uxy, uyy, ux, uy, u0);
+		System.out.println();
 
 		this.x1 = x1;
 		this.y1 = y1;
@@ -110,97 +110,51 @@ public class BezierCurve {
 		double oux = other.ux;
 		double ouy = other.uy;
 		double ou0 = other.u0;
-
-		//This is the polynomial we need to solve to find the values of t
-		//where the intersection(s) occur
-		//p09*t^9 + p08*t^8 + ... + p01*t + p00 = 0
-
-		double p09 = a3*ouxyy*b3*b3 + b3*ouxxy*a3*a3 + ouxxx*a3*a3*a3 + ouyyy*b3*b3*b3;
-		double p08 = 2.0*a2*a3*b3*ouxxy + 2.0*a3*b2*b3*ouxyy + a2*ouxyy*b3*b3 + b2*ouxxy*a3*a3 + 3.0*a2*ouxxx*a3*a3 + 3.0*b2*ouyyy*b3*b3;
-		double p07 = 2*a1*a3*b3*ouxxy + 2.0*a2*a3*b2*ouxxy + 2.0*a2*b2*b3*ouxyy + 2.0*a3*b1*b3*ouxyy + a1*ouxyy*b3*b3 + a3*ouxyy*b2*b2 + b1*ouxxy*a3*a3 + b3*ouxxy*a2*a2 + 3.0*a1*ouxxx*a3*a3 + 3.0*a3*ouxxx*a2*a2 + 3.0*b1*ouyyy*b3*b3 + 3.0*b3*ouyyy*b2*b2;
-		double p06 = a3*b3*ouxy + 2.0*a0*a3*b3*ouxxy + 2.0*a1*a2*b3*ouxxy + 2.0*a1*a3*b2*ouxxy + 2.0*a1*b2*b3*ouxyy + 2.0*a2*a3*b1*ouxxy + 2.0*a2*b1*b3*ouxyy + 2.0*a3*b0*b3*ouxyy + 2.0*a3*b1*b2*ouxyy + 6.0*a1*a2*a3*ouxxx + 6.0*b1*b2*b3*ouyyy + ouxx*a3*a3 + ouyy*b3*b3 + a0*ouxyy*b3*b3 + a2*ouxyy*b2*b2 + b0*ouxxy*a3*a3 + b2*ouxxy*a2*a2 + 3.0*a0*ouxxx*a3*a3 + 3.0*b0*ouyyy*b3*b3 + ouxxx*a2*a2*a2 + ouyyy*b2*b2*b2;
-		double p05 = a2*b3*ouxy + a3*b2*ouxy + 2.0*a2*a3*ouxx + 2.0*b2*b3*ouyy + 2.0*a0*a2*b3*ouxxy + 2.0*a0*a3*b2*ouxxy + 2.0*a0*b2*b3*ouxyy + 2.0*a1*a2*b2*ouxxy + 2.0*a1*a3*b1*ouxxy + 2.0*a1*b1*b3*ouxyy + 2.0*a2*a3*b0*ouxxy + 2.0*a2*b0*b3*ouxyy + 2.0*a2*b1*b2*ouxyy + 2.0*a3*b0*b2*ouxyy + 6.0*a0*a2*a3*ouxxx + 6.0*b0*b2*b3*ouyyy + a1*ouxyy*b2*b2 + a3*ouxyy*b1*b1 + b1*ouxxy*a2*a2 + b3*ouxxy*a1*a1 + 3.0*a1*ouxxx*a2*a2 + 3.0*a3*ouxxx*a1*a1 + 3.0*b1*ouyyy*b2*b2 + 3.0*b3*ouyyy*b1*b1;
-		double p04 = a1*b3*ouxy + a2*b2*ouxy + a3*b1*ouxy + 2.0*a1*a3*ouxx + 2.0*b1*b3*ouyy + 2.0*a0*a1*b3*ouxxy + 2.0*a0*a2*b2*ouxxy + 2.0*a0*a3*b1*ouxxy + 2.0*a0*b1*b3*ouxyy + 2.0*a1*a2*b1*ouxxy + 2.0*a1*a3*b0*ouxxy + 2.0*a1*b0*b3*ouxyy + 2.0*a1*b1*b2*ouxyy + 2.0*a2*b0*b2*ouxyy + 2.0*a3*b0*b1*ouxyy + 6.0*a0*a1*a3*ouxxx + 6.0*b0*b1*b3*ouyyy + ouxx*a2*a2 + ouyy*b2*b2 + a0*ouxyy*b2*b2 + a2*ouxyy*b1*b1 + b0*ouxxy*a2*a2 + b2*ouxxy*a1*a1 + 3.0*a0*ouxxx*a2*a2 + 3.0*a2*ouxxx*a1*a1 + 3.0*b0*ouyyy*b2*b2 + 3.0*b2*ouyyy*b1*b1;
-		double p03 = a3*oux + b3*ouy + a0*b3*ouxy + a1*b2*ouxy + a2*b1*ouxy + a3*b0*ouxy + 2.0*a0*a3*ouxx + 2.0*a1*a2*ouxx + 2.0*b0*b3*ouyy + 2.0*b1*b2*ouyy + 2.0*a0*a1*b2*ouxxy + 2.0*a0*a2*b1*ouxxy + 2.0*a0*a3*b0*ouxxy + 2.0*a0*b0*b3*ouxyy + 2.0*a0*b1*b2*ouxyy + 2.0*a1*a2*b0*ouxxy + 2.0*a1*b0*b2*ouxyy + 2.0*a2*b0*b1*ouxyy + 6.0*a0*a1*a2*ouxxx + 6.0*b0*b1*b2*ouyyy + a1*ouxyy*b1*b1 + a3*ouxyy*b0*b0 + b1*ouxxy*a1*a1 + b3*ouxxy*a0*a0 + 3.0*a3*ouxxx*a0*a0 + 3.0*b3*ouyyy*b0*b0 + ouxxx*a1*a1*a1 + ouyyy*b1*b1*b1;
-		double p02 = a2*oux + b2*ouy + a0*b2*ouxy + a1*b1*ouxy + a2*b0*ouxy + 2.0*a0*a2*ouxx + 2.0*b0*b2*ouyy + 2.0*a0*a1*b1*ouxxy + 2.0*a0*a2*b0*ouxxy + 2.0*a0*b0*b2*ouxyy + 2.0*a1*b0*b1*ouxyy + ouxx*a1*a1 + ouyy*b1*b1 + a0*ouxyy*b1*b1 + a2*ouxyy*b0*b0 + b0*ouxxy*a1*a1 + b2*ouxxy*a0*a0 + 3.0*a0*ouxxx*a1*a1 + 3.0*a2*ouxxx*a0*a0 + 3.0*b0*ouyyy*b1*b1 + 3.0*b2*ouyyy*b0*b0;
-		double p01 = a1*oux + b1*ouy + a0*b1*ouxy + a1*b0*ouxy + 2.0*a0*a1*ouxx + 2.0*b0*b1*ouyy + 2.0*a0*a1*b0*ouxxy + 2.0*a0*b0*b1*ouxyy + a1*ouxyy*b0*b0 + b1*ouxxy*a0*a0 + 3.0*a1*ouxxx*a0*a0 + 3.0*b1*ouyyy*b0*b0;
-		double p00 = ou0 + a0*oux + b0*ouy + a0*b0*ouxy + ouxx*a0*a0 + ouyy*b0*b0 + a0*ouxyy*b0*b0 + b0*ouxxy*a0*a0 + ouxxx*a0*a0*a0 + ouyyy*b0*b0*b0;
-
-		//System.out.printf("p0(t) = %gt^9 + %gt^8 + %gt^7 + %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p09, p08, p07, p06, p05, p04, p03, p02, p01, p00);
-
-		//We do so using Sturm's method
-
-		double p18 = 9.0*p09;
-		double p17 = 8.0*p08;
-		double p16 = 7.0*p07;
-		double p15 = 6.0*p06;
-		double p14 = 5.0*p05;
-		double p13 = 4.0*p04;
-		double p12 = 3.0*p03;
-		double p11 = 2.0*p02;
-		double p10 = p01;
-
-		//System.out.printf("p1(t) = %gt^8 + %gt^7 + %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p18, p17, p16, p15, p14, p13, p12, p11, p10);
-
-		double p20 = -(p00 + (p09*p10*p17) / (p18*p18) - (p08*p10) / p18);
-		double p21 = -(p01 + (p09*p11*p17) / (p18*p18) - (p09*p10) / p18 - (p08*p11) / p18);
-		double p22 = -(p02 + (p09*p12*p17) / (p18*p18) - (p09*p11) / p18 - (p08*p12) / p18);
-		double p23 = -(p03 + (p09*p13*p17) / (p18*p18) - (p09*p12) / p18 - (p08*p13) / p18);
-		double p24 = -(p04 + (p09*p14*p17) / (p18*p18) - (p09*p13) / p18 - (p08*p14) / p18);
-		double p25 = -(p05 + (p09*p15*p17) / (p18*p18) - (p09*p14) / p18 - (p08*p15) / p18);
-		double p26 = -(p06 + (p09*p16*p17) / (p18*p18) - (p09*p15) / p18 - (p08*p16) / p18);
-		double p27 = -(p07 + (p09*p17*p17) / (p18*p18) - (p09*p16) / p18 - (p08*p17) / p18);
-
-		//System.out.printf("p2(t) = %gt^7 + %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p27, p26, p25, p24, p23, p22, p21, p20);
-
-		double p30 = -(p10 + (p18*p20*p26) / (p27*p27) - (p17*p20) / p27);
-		double p31 = -(p11 + (p18*p21*p26) / (p27*p27) - (p18*p20) / p27 - (p17*p21) / p27);
-		double p32 = -(p12 + (p18*p22*p26) / (p27*p27) - (p18*p21) / p27 - (p17*p22) / p27);
-		double p33 = -(p13 + (p18*p23*p26) / (p27*p27) - (p18*p22) / p27 - (p17*p23) / p27);
-		double p34 = -(p14 + (p18*p24*p26) / (p27*p27) - (p18*p23) / p27 - (p17*p24) / p27);
-		double p35 = -(p15 + (p18*p25*p26) / (p27*p27) - (p18*p24) / p27 - (p17*p25) / p27);
-		double p36 = -(p16 + (p18*p26*p26) / (p27*p27) - (p18*p25) / p27 - (p17*p26) / p27);
-
-		//System.out.printf("p3(t) = %gt^6 + %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p36, p35, p34, p33, p32, p31, p30);
-
-		double p40 = -(p20 + (p27*p30*p35) / (p36*p36) - (p26*p30) / p36);
-		double p41 = -(p21 + (p27*p31*p35) / (p36*p36) - (p27*p30) / p36 - (p26*p31) / p36);
-		double p42 = -(p22 + (p27*p32*p35) / (p36*p36) - (p27*p31) / p36 - (p26*p32) / p36);
-		double p43 = -(p23 + (p27*p33*p35) / (p36*p36) - (p27*p32) / p36 - (p26*p33) / p36);
-		double p44 = -(p24 + (p27*p34*p35) / (p36*p36) - (p27*p33) / p36 - (p26*p34) / p36);
-		double p45 = -(p25 + (p27*p35*p35) / (p36*p36) - (p27*p34) / p36 - (p26*p35) / p36);
-
-		//System.out.printf("p4(t) = %gt^5 + %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p45, p44, p43, p42, p41, p40);
-
-		double p50 = -(p30 + (p36*p40*p44) / (p45*p45) - (p35*p40) / p45);
-		double p51 = -(p31 + (p36*p41*p44) / (p45*p45) - (p36*p40) / p45 - (p35*p41) / p45);
-		double p52 = -(p32 + (p36*p42*p44) / (p45*p45) - (p36*p41) / p45 - (p35*p42) / p45);
-		double p53 = -(p33 + (p36*p43*p44) / (p45*p45) - (p36*p42) / p45 - (p35*p43) / p45);
-		double p54 = -(p34 + (p36*p44*p44) / (p45*p45) - (p36*p43) / p45 - (p35*p44) / p45);
-
-		//System.out.printf("p5(t) = %gt^4 + %gt^3 + %gt^2 + %gt + %g\n", p54, p53, p52, p51, p50);
-
-		double p60 = -(p40 + (p45*p50*p53) / (p54*p54) - (p44*p50) / p54);
-		double p61 = -(p41 + (p45*p51*p53) / (p54*p54) - (p45*p50) / p54 - (p44*p51) / p54);
-		double p62 = -(p42 + (p45*p52*p53) / (p54*p54) - (p45*p51) / p54 - (p44*p52) / p54);
-		double p63 = -(p43 + (p45*p53*p53) / (p54*p54) - (p45*p52) / p54 - (p44*p53) / p54);
-
-		//System.out.printf("p6(t) = %gt^3 + %gt^2 + %gt + %g\n", p63, p62, p61, p60);
-
-		double p70 = -(p50 + (p54*p60*p62) / (p63*p63) - (p53*p60) / p63);
-		double p71 = -(p51 + (p54*p61*p62) / (p63*p63) - (p54*p60) / p63 - (p53*p61) / p63);
-		double p72 = -(p52 + (p54*p62*p62) / (p63*p63) - (p54*p61) / p63 - (p53*p62) / p63);
-
-		//System.out.printf("p7(t) = %gt^2 + %gt + %g\n", p72, p71, p70);
-
-		double p80 = -(p60 + (p63*p70*p71) / (p72*p72) - (p62*p70) / p72);
-		double p81 = -(p61 + (p63*p71*p71) / (p72*p72) - (p63*p70) / p72 - (p62*p71) / p72);
-
-		//System.out.printf("p8(t) = %gt + %g\n", p81, p80);
-
-		double p90 = -(p70 + (p72*p80*p80) / (p81*p81) - (p71*p80) / p81);
-
-		//System.out.printf("p9(t) = %g\n", p90);
+		
+		double[][] sturmChain = new double[10][10];
+		int[] degrees = new int[10];
+		
+		//Set up the initial values of the Sturm chain
+		sturmChain[0][9] = a3*ouxyy*b3*b3 + b3*ouxxy*a3*a3 + ouxxx*a3*a3*a3 + ouyyy*b3*b3*b3;
+		sturmChain[0][8] = 2.0*a2*a3*b3*ouxxy + 2.0*a3*b2*b3*ouxyy + a2*ouxyy*b3*b3 + b2*ouxxy*a3*a3 + 3.0*a2*ouxxx*a3*a3 + 3.0*b2*ouyyy*b3*b3;
+		sturmChain[0][7] = 2.0*a1*a3*b3*ouxxy + 2.0*a2*a3*b2*ouxxy + 2.0*a2*b2*b3*ouxyy + 2.0*a3*b1*b3*ouxyy + a1*ouxyy*b3*b3 + a3*ouxyy*b2*b2 + b1*ouxxy*a3*a3 + b3*ouxxy*a2*a2 + 3.0*a1*ouxxx*a3*a3 + 3.0*a3*ouxxx*a2*a2 + 3.0*b1*ouyyy*b3*b3 + 3.0*b3*ouyyy*b2*b2;
+		sturmChain[0][6] = a3*b3*ouxy + 2.0*a0*a3*b3*ouxxy + 2.0*a1*a2*b3*ouxxy + 2.0*a1*a3*b2*ouxxy + 2.0*a1*b2*b3*ouxyy + 2.0*a2*a3*b1*ouxxy + 2.0*a2*b1*b3*ouxyy + 2.0*a3*b0*b3*ouxyy + 2.0*a3*b1*b2*ouxyy + 6.0*a1*a2*a3*ouxxx + 6.0*b1*b2*b3*ouyyy + ouxx*a3*a3 + ouyy*b3*b3 + a0*ouxyy*b3*b3 + a2*ouxyy*b2*b2 + b0*ouxxy*a3*a3 + b2*ouxxy*a2*a2 + 3.0*a0*ouxxx*a3*a3 + 3.0*b0*ouyyy*b3*b3 + ouxxx*a2*a2*a2 + ouyyy*b2*b2*b2;
+		sturmChain[0][5] = a2*b3*ouxy + a3*b2*ouxy + 2.0*a2*a3*ouxx + 2.0*b2*b3*ouyy + 2.0*a0*a2*b3*ouxxy + 2.0*a0*a3*b2*ouxxy + 2.0*a0*b2*b3*ouxyy + 2.0*a1*a2*b2*ouxxy + 2.0*a1*a3*b1*ouxxy + 2.0*a1*b1*b3*ouxyy + 2.0*a2*a3*b0*ouxxy + 2.0*a2*b0*b3*ouxyy + 2.0*a2*b1*b2*ouxyy + 2.0*a3*b0*b2*ouxyy + 6.0*a0*a2*a3*ouxxx + 6.0*b0*b2*b3*ouyyy + a1*ouxyy*b2*b2 + a3*ouxyy*b1*b1 + b1*ouxxy*a2*a2 + b3*ouxxy*a1*a1 + 3.0*a1*ouxxx*a2*a2 + 3.0*a3*ouxxx*a1*a1 + 3.0*b1*ouyyy*b2*b2 + 3.0*b3*ouyyy*b1*b1;
+		sturmChain[0][4] = a1*b3*ouxy + a2*b2*ouxy + a3*b1*ouxy + 2.0*a1*a3*ouxx + 2.0*b1*b3*ouyy + 2.0*a0*a1*b3*ouxxy + 2.0*a0*a2*b2*ouxxy + 2.0*a0*a3*b1*ouxxy + 2.0*a0*b1*b3*ouxyy + 2.0*a1*a2*b1*ouxxy + 2.0*a1*a3*b0*ouxxy + 2.0*a1*b0*b3*ouxyy + 2.0*a1*b1*b2*ouxyy + 2.0*a2*b0*b2*ouxyy + 2.0*a3*b0*b1*ouxyy + 6.0*a0*a1*a3*ouxxx + 6.0*b0*b1*b3*ouyyy + ouxx*a2*a2 + ouyy*b2*b2 + a0*ouxyy*b2*b2 + a2*ouxyy*b1*b1 + b0*ouxxy*a2*a2 + b2*ouxxy*a1*a1 + 3.0*a0*ouxxx*a2*a2 + 3.0*a2*ouxxx*a1*a1 + 3.0*b0*ouyyy*b2*b2 + 3.0*b2*ouyyy*b1*b1;
+		sturmChain[0][3] = a3*oux + b3*ouy + a0*b3*ouxy + a1*b2*ouxy + a2*b1*ouxy + a3*b0*ouxy + 2.0*a0*a3*ouxx + 2.0*a1*a2*ouxx + 2.0*b0*b3*ouyy + 2.0*b1*b2*ouyy + 2.0*a0*a1*b2*ouxxy + 2.0*a0*a2*b1*ouxxy + 2.0*a0*a3*b0*ouxxy + 2.0*a0*b0*b3*ouxyy + 2.0*a0*b1*b2*ouxyy + 2.0*a1*a2*b0*ouxxy + 2.0*a1*b0*b2*ouxyy + 2.0*a2*b0*b1*ouxyy + 6.0*a0*a1*a2*ouxxx + 6.0*b0*b1*b2*ouyyy + a1*ouxyy*b1*b1 + a3*ouxyy*b0*b0 + b1*ouxxy*a1*a1 + b3*ouxxy*a0*a0 + 3.0*a3*ouxxx*a0*a0 + 3.0*b3*ouyyy*b0*b0 + ouxxx*a1*a1*a1 + ouyyy*b1*b1*b1;
+		sturmChain[0][2] = a2*oux + b2*ouy + a0*b2*ouxy + a1*b1*ouxy + a2*b0*ouxy + 2.0*a0*a2*ouxx + 2.0*b0*b2*ouyy + 2.0*a0*a1*b1*ouxxy + 2.0*a0*a2*b0*ouxxy + 2.0*a0*b0*b2*ouxyy + 2.0*a1*b0*b1*ouxyy + ouxx*a1*a1 + ouyy*b1*b1 + a0*ouxyy*b1*b1 + a2*ouxyy*b0*b0 + b0*ouxxy*a1*a1 + b2*ouxxy*a0*a0 + 3.0*a0*ouxxx*a1*a1 + 3.0*a2*ouxxx*a0*a0 + 3.0*b0*ouyyy*b1*b1 + 3.0*b2*ouyyy*b0*b0;
+		sturmChain[0][1] = a1*oux + b1*ouy + a0*b1*ouxy + a1*b0*ouxy + 2.0*a0*a1*ouxx + 2.0*b0*b1*ouyy + 2.0*a0*a1*b0*ouxxy + 2.0*a0*b0*b1*ouxyy + a1*ouxyy*b0*b0 + b1*ouxxy*a0*a0 + 3.0*a1*ouxxx*a0*a0 + 3.0*b1*ouyyy*b0*b0;
+		sturmChain[0][0] = ou0 + a0*oux + b0*ouy + a0*b0*ouxy + ouxx*a0*a0 + ouyy*b0*b0 + a0*ouxyy*b0*b0 + b0*ouxxy*a0*a0 + ouxxx*a0*a0*a0 + ouyyy*b0*b0*b0;
+		int initialDegree;
+		for (initialDegree = 9; Math.abs(sturmChain[0][initialDegree]) == 0.0; initialDegree--) ;
+		degrees[0] = initialDegree;
+		
+		//Compute the derivative of the initial function
+		for (int i = 0; i < degrees[0]; i++) {
+			sturmChain[1][i] = (double) (i + 1) * sturmChain[0][i + 1];
+		}
+		degrees[1] = Math.max(0, degrees[0] - 1);
+		
+		//Then iteratively compute the next polynomial in the chain
+		int chainSize;
+		for (chainSize = 1; degrees[chainSize] > 0; chainSize++) {
+			int current = chainSize;
+			int prev = current - 1;
+			int next = current + 1;
+			double divisor = sturmChain[current][degrees[current]];
+			double prev_degree = sturmChain[prev][degrees[prev]];
+			double term1const = (prev_degree*sturmChain[current][degrees[current] - 1]) / (divisor*divisor);
+			double term2const = prev_degree / divisor;
+			double term3const = sturmChain[prev][degrees[prev] - 1] / divisor;
+			sturmChain[next][0] = -sturmChain[prev][0] - term1const*sturmChain[current][0] + term3const*sturmChain[current][0];
+			for (int i = 1; i < degrees[current]; i++) {
+				sturmChain[next][i] = -sturmChain[prev][i] - term1const*sturmChain[current][i] + term2const*sturmChain[current][i - 1] + term3const*sturmChain[current][i];
+			}
+			int degree;
+			for (degree = degrees[current]; Math.abs(sturmChain[next][degree]) == 0.0; degree--) ;
+			degrees[next] = degree;
+		}
+		//System.out.println("Sturm coefficients are:\n" + Arrays.deepToString(sturmChain).replace("], [", "]\n["));
 		//System.out.println();
 
 		//Valid roots are only those in the t range [0, 1], so we start our
@@ -217,34 +171,35 @@ public class BezierCurve {
 			ranges.remove(start);
 
 			//Evaluate the polynomials using a Horner scheme
-			double startp0 = p00 + start*(p01 + start*(p02 + start*(p03 + start*(p04 + start*(p05 + start*(p06 + start*(p07 + start*(p08 + start*p09))))))));
-			double startp1 = p10 + start*(p11 + start*(p12 + start*(p13 + start*(p14 + start*(p15 + start*(p16 + start*(p17 + start*p18)))))));
-			double startp2 = p20 + start*(p21 + start*(p22 + start*(p23 + start*(p24 + start*(p25 + start*(p26 + start*p27))))));
-			double startp3 = p30 + start*(p31 + start*(p32 + start*(p33 + start*(p34 + start*(p35 + start*p36)))));
-			double startp4 = p40 + start*(p41 + start*(p42 + start*(p43 + start*(p44 + start*p45))));
-			double startp5 = p50 + start*(p51 + start*(p52 + start*(p53 + start*p54)));
-			double startp6 = p60 + start*(p61 + start*(p62 + start*p63));
-			double startp7 = p70 + start*(p71 + start*p72);
-			double startp8 = p80 + start*p81;
-			double startp9 = p90;
-			double endp0 = p00 + end*(p01 + end*(p02 + end*(p03 + end*(p04 + end*(p05 + end*(p06 + end*(p07 + end*(p08 + end*p09))))))));
-			double endp1 = p10 + end*(p11 + end*(p12 + end*(p13 + end*(p14 + end*(p15 + end*(p16 + end*(p17 + end*p18)))))));
-			double endp2 = p20 + end*(p21 + end*(p22 + end*(p23 + end*(p24 + end*(p25 + end*(p26 + end*p27))))));
-			double endp3 = p30 + end*(p31 + end*(p32 + end*(p33 + end*(p34 + end*(p35 + end*p36)))));
-			double endp4 = p40 + end*(p41 + end*(p42 + end*(p43 + end*(p44 + end*p45))));
-			double endp5 = p50 + end*(p51 + end*(p52 + end*(p53 + end*p54)));
-			double endp6 = p60 + end*(p61 + end*(p62 + end*p63));
-			double endp7 = p70 + end*(p71 + end*p72);
-			double endp8 = p80 + end*p81;
-			double endp9 = p90;
-
-			//And count the number of sign changes that occur in the range
-			int startsignchange = ((startp0 >= 0.0) == (startp1 >= 0.0) ? 0 : 1) + ((startp1 >= 0.0) == (startp2 >= 0.0) ? 0 : 1) + ((startp2 >= 0.0) == (startp3 >= 0.0) ? 0 : 1) + ((startp3 >= 0.0) == (startp4 >= 0.0) ? 0 : 1) + ((startp4 >= 0.0) == (startp5 >= 0.0) ? 0 : 1) + ((startp5 >= 0.0) == (startp6 >= 0.0) ? 0 : 1) + ((startp6 >= 0.0) == (startp7 >= 0.0) ? 0 : 1) + ((startp7 >= 0.0) == (startp8 >= 0.0) ? 0 : 1) + ((startp8 >= 0.0) == (startp9 >= 0.0) ? 0 : 1);
-			int endsignchange = ((endp0 >= 0.0) == (endp1 >= 0.0) ? 0 : 1) + ((endp1 >= 0.0) == (endp2 >= 0.0) ? 0 : 1) + ((endp2 >= 0.0) == (endp3 >= 0.0) ? 0 : 1) + ((endp3 >= 0.0) == (endp4 >= 0.0) ? 0 : 1) + ((endp4 >= 0.0) == (endp5 >= 0.0) ? 0 : 1) + ((endp5 >= 0.0) == (endp6 >= 0.0) ? 0 : 1) + ((endp6 >= 0.0) == (endp7 >= 0.0) ? 0 : 1) + ((endp7 >= 0.0) == (endp8 >= 0.0) ? 0 : 1) + ((endp8 >= 0.0) == (endp9 >= 0.0) ? 0 : 1);
-
+			double[] startvals = new double[chainSize + 1];
+			double[] endvals = new double[chainSize + 1];
+			for (int i = 0; i <= chainSize; i++) {
+				double startval = 0.0, endval = 0.0;
+				for (int deg = degrees[i]; deg > 0; deg--) {
+					double add = sturmChain[i][deg];
+					startval += add;
+					startval *= start;
+					endval += add;
+					endval *= end;
+				}
+				startvals[i] = startval + sturmChain[i][0];
+				endvals[i] = endval + sturmChain[i][0];
+			}
+			
+			//Count the number of sign changes between each polynomial
+			int startsignchanges = 0, endsignchanges = 0;
+			for (int i = 0; i < chainSize; i++) {
+				if ((startvals[i] >= 0.0) == (startvals[i + 1] >= 0.0)) {
+					startsignchanges++;
+				}
+				if ((endvals[i] >= 0.0) == (endvals[i + 1] >= 0.0)) {
+					endsignchanges++;
+				}
+			}
+			
 			//The number of roots in the range is the difference between the
 			//sign change counts
-			int nroots = Math.abs(startsignchange - endsignchange);
+			int nroots = Math.abs(startsignchanges - endsignchanges);
 			if (nroots > 0) {
 				double mid = (start + end) / 2.0;
 				if (Math.abs(start - end) < EPSILON) {
@@ -259,9 +214,7 @@ public class BezierCurve {
 		//System.out.println();
 
 		for (double t : roots) {
-			//Again, use a Horner scheme to evaluate the polynomials for the curve
-			//Remember that we need to use the parametric equation of the "this"
-			//curve for this, since the "other" curve was implicitized
+			//Remember, the t values for the roots are on this curve, not the other
 			intersections.add(new BezierPoint(this, t));
 		}
 		return intersections;
@@ -325,7 +278,7 @@ public class BezierCurve {
 
 	@Override
 	public String toString() {
-		return "(" + x1 + ", " + x1 + ")--(" + cx1 + ", " + cy1 + ")--(" + cx2 + ", " + cy2 + ")--(" + x2 + ", " + y2 + ")";
+		return "(" + x1 + ", " + y1 + ")--(" + cx1 + ", " + cy1 + ")--(" + cx2 + ", " + cy2 + ")--(" + x2 + ", " + y2 + ")";
 	}
 
 	public static void main(String[] args) {

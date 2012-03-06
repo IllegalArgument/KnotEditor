@@ -27,7 +27,10 @@ public class SVGKnotEditor {
 				intersections.add(selfIntersect);
 			}
 			for (int j = i + 1; j < curves.size(); j++) {
-				intersections.addAll(BezierIntersection.createIntersections(p, curves.get(j)));
+				System.out.println("Intersecting " + p + " and " + curves.get(j));
+				Set<BezierIntersection> intersects = BezierIntersection.createIntersections(p, curves.get(j));
+				System.out.println("Found " + intersects.size() + " intersections");
+				intersections.addAll(intersects);
 			}
 		}
 		
@@ -37,26 +40,31 @@ public class SVGKnotEditor {
 	public static void main(String[] args) {
 		BezierCurve p = new BezierCurve(0, 1000, 1500, 0, -500, 0, 1000, 1000);
 		BezierCurve q = new BezierCurve(0, 0, 1500, 1000, -500, 1000, 1000, 0);
-		BezierCurve r = new BezierCurve(0, 1000, 333, -2000, 666, 3000, 1000, 0);
-		BezierCurve s = new BezierCurve(0, 0, 3000, 333, -2000, 666, 1000, 1000);
+		BezierCurve r = new BezierCurve(20, 1000, 333, -2000, 666, 3000, 980, 0);
+		BezierCurve s = new BezierCurve(0, 20, 3000, 333, -2000, 666, 1000, 980);
+		BezierCurve t = new BezierCurve(10, 0, 333, 1500, 666, -500, 990, 1000);
+		BezierCurve u = new BezierCurve(10, 1000, 333, -500, 666, 1500, 990, 0);
 		List<BezierCurve> curves = new ArrayList<BezierCurve>();
 		curves.add(p);
 		curves.add(q);
 		curves.add(r);
 		curves.add(s);
+		curves.add(t);
+		curves.add(u);
+		curves.add(new BezierCurve(0, 1000, 1500, 0, -500, 0, 1000, 1000));
+		long start = System.currentTimeMillis();
 		Set<BezierIntersection> intersections = findIntersections(curves);
+		System.out.println("Computed all intersections in " + (System.currentTimeMillis() - start) + " ms");
 		
 		BufferedImage img = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = img.createGraphics();
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 		g.setStroke(new BasicStroke(1));
-		g.draw(new CubicCurve2D.Double(p.x1, p.y1, p.cx1, p.cy1, p.cx2, p.cy2, p.x2, p.y2));
-		g.draw(new CubicCurve2D.Double(q.x1, q.y1, q.cx1, q.cy1, q.cx2, q.cy2, q.x2, q.y2));
-		g.draw(new CubicCurve2D.Double(r.x1, r.y1, r.cx1, r.cy1, r.cx2, r.cy2, r.x2, r.y2));
-		g.draw(new CubicCurve2D.Double(s.x1, s.y1, s.cx1, s.cy1, s.cx2, s.cy2, s.x2, s.y2));
+		for (BezierCurve c : curves) {
+			g.draw(new CubicCurve2D.Double(c.x1, c.y1, c.cx1, c.cy1, c.cx2, c.cy2, c.x2, c.y2));
+		}
 		g.setStroke(new BasicStroke(2));
 		g.setColor(Color.RED);
 		for (BezierIntersection intersect : intersections) {
